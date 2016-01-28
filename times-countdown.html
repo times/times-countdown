@@ -39,13 +39,18 @@ Example:
       :host {
         display: block;
         box-sizing: border-box;
+        text-align: center;
+      }
+
+      #countdown {
+        margin: 0 auto;
       }
 
     </style>
 
     <div id="countdown" class="layout vertical">
       <h1>[[countdownHeadline]]</h1>
-      <div class="layout horizontal">
+      <div class="layout horizontal around-justified">
         <div id="countdown-months" hidden$=[[!months]]>
           <figure>[[countdownMonths]]</figure>
           <h2>Months</h2>
@@ -59,15 +64,15 @@ Example:
           <h2>Days</h2>
         </div>
         <div id="countdown-hours" hidden$=[[!hours]]>
-          <figure>[[countdownDays]]</figure>
+          <figure>[[countdownHours]]</figure>
           <h2>Hours</h2>
         </div>
         <div id="countdown-minutes" hidden$=[[!minutes]]>
-          <figure>[[countdownDays]]</figure>
+          <figure>[[countdownMinutes]]</figure>
           <h2>Minutes</h2>
         </div>
         <div id="countdown-seconds" hidden$=[[!seconds]]>
-          <figure>[[countdownDays]]</figure>
+          <figure>[[countdownSeconds]]</figure>
           <h2>Seconds</h2>
         </div>
       </div>
@@ -169,7 +174,7 @@ Example:
 
         setInterval(function(){
           this.updateCountdown();
-        }, this.updateInterval);
+        }.bind(this), this.updateInterval);
       },
 
       attached: function() {
@@ -197,11 +202,21 @@ Example:
         var then = moment(this.countdownTo);
 
         this.countdownMonths = then.diff(now, 'months');
-        this.countdownWeeks = then.diff(now, 'weeks');
-        this.countdownDays = then.diff(now, 'days');
-        this.countdownHours = then.diff(now, 'hours');
-        this.countdownMinutes = then.diff(now, 'minutes');
-        this.countdownSeconds = then.diff(now, 'seconds');
+
+        this.countdownWeeks = then.subtract(this.months ? this.countdownMonths : 0, 'months')
+          .diff(now, 'weeks');
+
+        this.countdownDays = then.subtract(this.weeks ? this.countdownWeeks : 0, 'weeks')
+          .diff(now, 'days');
+
+        this.countdownHours = then.subtract(this.days ? this.countdownDays : 0, 'days')
+          .diff(now, 'hours');
+
+        this.countdownMinutes = then.subtract(this.hours ? this.countdownHours : 0, 'hours')
+          .diff(now, 'minutes');
+
+        this.countdownSeconds = then.subtract(this.minutes ? this.countdownMinutes : 0, 'minutes')
+          .diff(now, 'seconds');
       }
     });
   </script>
