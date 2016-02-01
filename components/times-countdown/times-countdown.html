@@ -1,0 +1,223 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/classes/iron-flex-layout.html">
+<script src="../moment/moment.js"></script>
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <times-countdown></times-countdown>
+
+Example:
+
+    <times-countdown
+      countdown-headline="Time Until Election"
+      months="true"
+      weeks="true"
+      days="true"
+      countdown-to="2016-11-08">
+    </times-countdown>
+
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="times-countdown">
+  <template>
+    <style>
+      :host {
+        display: block;
+        box-sizing: border-box;
+        text-align: center;
+      }
+
+      #countdown {
+        margin: 0 auto;
+      }
+
+    </style>
+
+    <div id="countdown" class="layout vertical">
+      <h1>[[countdownHeadline]]</h1>
+      <div class="layout horizontal around-justified">
+        <div id="countdown-months" hidden$=[[!months]]>
+          <figure>[[countdownMonths]]</figure>
+          <h2>Months</h2>
+        </div>
+        <div id="countdown-weeks" hidden$=[[!weeks]]>
+          <figure>[[countdownWeeks]]</figure>
+          <h2>Weeks</h2>
+        </div>
+        <div id="countdown-days" hidden$=[[!days]]>
+          <figure>[[countdownDays]]</figure>
+          <h2>Days</h2>
+        </div>
+        <div id="countdown-hours" hidden$=[[!hours]]>
+          <figure>[[countdownHours]]</figure>
+          <h2>Hours</h2>
+        </div>
+        <div id="countdown-minutes" hidden$=[[!minutes]]>
+          <figure>[[countdownMinutes]]</figure>
+          <h2>Minutes</h2>
+        </div>
+        <div id="countdown-seconds" hidden$=[[!seconds]]>
+          <figure>[[countdownSeconds]]</figure>
+          <h2>Seconds</h2>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'times-countdown',
+
+      properties: {
+        /**
+         * The headline to use for the countdown timer.
+         * @type {String}
+         */
+        countdownHeadline: {
+          type: String,
+          value: function() {
+            return 'IT IS THE FINAL COUNTDOWN';
+          }
+        },
+
+        /**
+         * Date value in shortened ISO-9001 format to count down to.
+         * @type {String}
+         */
+        countdownTo: {
+          type: String,
+          value: function() {
+            return '2016-11-08';
+          }
+        },
+
+        months: {
+          type: Boolean,
+          value: function() {
+            return true;
+          }
+        },
+
+        weeks: {
+          type: Boolean,
+          value: function() {
+            return true;
+          }
+        },
+
+        days: {
+          type: Boolean,
+          value: function() {
+            return true;
+          }
+        },
+
+        hours: {
+          type: Boolean,
+          value: function() {
+            return false;
+          }
+        },
+
+        minutes: {
+          type: Boolean,
+          value: function() {
+            return false;
+          }
+        },
+
+        seconds: {
+          type: Boolean,
+          value: function() {
+            return false;
+          }
+        }
+      },
+
+      // Element Lifecycle
+
+      ready: function() {
+        // `ready` is called after all elements have been configured, but
+        // propagates bottom-up. This element's children are ready, but parents
+        // are not.
+        //
+        // This is the point where you should make modifications to the DOM (when
+        // necessary), or kick off any processes the element wants to perform.
+
+        if (this.seconds) {
+          this.updateInterval = 1000; // 1s
+        } else if (this.minutes) {
+          this.updateInterval = 1000 * 60; // 1m
+        } else if (this.hours) {
+          this.updateInterval = 1000 * 60 * 60; // 1h
+        } else {
+          this.updateInterval = 1000 * 60 * 60 * 24; // 1d
+        }
+
+        this.updateCountdown(); // Initial population.
+
+
+        setInterval(function(){
+          this.updateCountdown();
+        }.bind(this), this.updateInterval);
+      },
+
+      attached: function() {
+        // `attached` fires once the element and its parents have been inserted
+        // into a document.
+        //
+        // This is a good place to perform any work related to your element's
+        // visual state or active behavior (measuring sizes, beginning animations,
+        // loading resources, etc).
+      },
+
+      detached: function() {
+        // The analog to `attached`, `detached` fires when the element has been
+        // removed from a document.
+        //
+        // Use this to clean up anything you did in `attached`.
+      },
+
+      /**
+       * Update the countdown clock.
+       * @return {void}
+       */
+      updateCountdown: function() {
+        var now = moment();
+        var then = moment(this.countdownTo);
+
+        this.countdownMonths = then.diff(now, 'months');
+
+        this.countdownWeeks = then.subtract(this.months ? this.countdownMonths : 0, 'months')
+          .diff(now, 'weeks');
+
+        this.countdownDays = then.subtract(this.weeks ? this.countdownWeeks : 0, 'weeks')
+          .diff(now, 'days');
+
+        this.countdownHours = then.subtract(this.days ? this.countdownDays : 0, 'days')
+          .diff(now, 'hours');
+
+        this.countdownMinutes = then.subtract(this.hours ? this.countdownHours : 0, 'hours')
+          .diff(now, 'minutes');
+
+        this.countdownSeconds = then.subtract(this.minutes ? this.countdownMinutes : 0, 'minutes')
+          .diff(now, 'seconds');
+      }
+    });
+  </script>
+</dom-module>
