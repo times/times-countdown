@@ -87,17 +87,19 @@ Example:
         /**
          * The headline to use for the countdown timer.
          * @type {String}
+         * @default 'Time remaining:'
          */
         countdownHeadline: {
           type: String,
           value: function() {
-            return 'IT IS THE FINAL COUNTDOWN';
+            return 'Time remaining:';
           }
         },
 
         /**
          * Date value in shortened ISO-9001 format to count down to.
          * @type {String}
+         * @default '2016-11-08'
          */
         countdownTo: {
           type: String,
@@ -106,6 +108,11 @@ Example:
           }
         },
 
+        /**
+         * Whether to show months
+         * @type {Boolean}
+         * @default true
+         */
         months: {
           type: Boolean,
           value: function() {
@@ -113,6 +120,11 @@ Example:
           }
         },
 
+        /**
+         * Whether to show weeks.
+         * @type {Boolean}
+         * @default true
+         */
         weeks: {
           type: Boolean,
           value: function() {
@@ -120,6 +132,11 @@ Example:
           }
         },
 
+        /**
+         * Whether to show days.
+         * @type {Boolean}
+         * @default true
+         */
         days: {
           type: Boolean,
           value: function() {
@@ -127,6 +144,11 @@ Example:
           }
         },
 
+        /**
+         * Whether to show hours
+         * @type {Boolean}
+         * @default false
+         */
         hours: {
           type: Boolean,
           value: function() {
@@ -134,6 +156,11 @@ Example:
           }
         },
 
+        /**
+         * Whether to show minutes.
+         * @type {Boolean}
+         * @default false
+         */
         minutes: {
           type: Boolean,
           value: function() {
@@ -141,6 +168,11 @@ Example:
           }
         },
 
+        /**
+         * Whether to show seconds
+         * @type {Boolean}
+         * @default false
+         */
         seconds: {
           type: Boolean,
           value: function() {
