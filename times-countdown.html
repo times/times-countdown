@@ -240,14 +240,18 @@ Example:
         this.countdownDays = then.subtract(this.weeks ? this.countdownWeeks : 0, 'weeks')
           .diff(now, 'days');
 
-        this.countdownHours = then.subtract(this.days ? this.countdownDays : 0, 'days')
-          .diff(now, 'hours');
+        if (this.hours || this.minutes || this.seconds) {
+          this.countdownHours = then.subtract(this.days ? this.countdownDays : 0, 'days')
+            .diff(now, 'hours');
 
-        this.countdownMinutes = then.subtract(this.hours ? this.countdownHours : 0, 'hours')
-          .diff(now, 'minutes');
+          this.countdownMinutes = then.subtract(this.hours ? this.countdownHours : 0, 'hours')
+            .diff(now, 'minutes');
 
-        this.countdownSeconds = then.subtract(this.minutes ? this.countdownMinutes : 0, 'minutes')
-          .diff(now, 'seconds');
+          this.countdownSeconds = then.subtract(this.minutes ? this.countdownMinutes : 0, 'minutes')
+            .diff(now, 'seconds');
+        } else {
+          this.countdownDays += 1;
+        }
       }
     });
   </script>
