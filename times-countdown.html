@@ -51,28 +51,28 @@ Example:
       <h1>[[countdownHeadline]]</h1>
       <div class="layout horizontal around-justified">
         <div id="countdown-months" hidden$=[[!months]]>
-          <figure>[[countdownMonths]]</figure>
-          <h2>Months</h2>
+          <figure>[[_countdownMonths]]</figure>
+          <h2>[[_returnUnit('Months', _countdownMonths)]]</h2>
         </div>
         <div id="countdown-weeks" hidden$=[[!weeks]]>
-          <figure>[[countdownWeeks]]</figure>
-          <h2>Weeks</h2>
+          <figure>[[_countdownWeeks]]</figure>
+          <h2>[[_returnUnit('Weeks', _countdownWeeks)]]</h2>
         </div>
         <div id="countdown-days" hidden$=[[!days]]>
-          <figure>[[countdownDays]]</figure>
-          <h2>Days</h2>
+          <figure>[[_countdownDays]]</figure>
+          <h2>[[_returnUnit('Days', _countdownDays)]]</h2>
         </div>
         <div id="countdown-hours" hidden$=[[!hours]]>
-          <figure>[[countdownHours]]</figure>
-          <h2>Hours</h2>
+          <figure>[[_countdownHours]]</figure>
+          <h2>[[_returnUnit('Hours', _countdownHours)]]</h2>
         </div>
         <div id="countdown-minutes" hidden$=[[!minutes]]>
-          <figure>[[countdownMinutes]]</figure>
-          <h2>Minutes</h2>
+          <figure>[[_countdownMinutes]]</figure>
+          <h2>[[_returnUnit('Minutes', _countdownMinutes)]]</h2>
         </div>
         <div id="countdown-seconds" hidden$=[[!seconds]]>
-          <figure>[[countdownSeconds]]</figure>
-          <h2>Seconds</h2>
+          <figure>[[_countdownSeconds]]</figure>
+          <h2>[[_returnUnit('Seconds', _countdownSeconds)]]</h2>
         </div>
       </div>
     </div>
@@ -92,7 +92,7 @@ Example:
           type: String,
           value: function() {
             return 'Time remaining:';
-          }
+          },
         },
 
         /**
@@ -200,11 +200,11 @@ Example:
           this.updateInterval = 1000 * 60 * 60 * 24; // 1d
         }
 
-        this.updateCountdown(); // Initial population.
+        this._updateCountdown(); // Initial population.
 
 
         setInterval(function(){
-          this.updateCountdown();
+          this._updateCountdown();
         }.bind(this), this.updateInterval);
       },
 
@@ -228,30 +228,34 @@ Example:
        * Update the countdown clock.
        * @return {void}
        */
-      updateCountdown: function() {
+      _updateCountdown: function() {
         var now = moment();
         var then = moment(this.countdownTo);
 
-        this.countdownMonths = then.diff(now, 'months');
+        this._countdownMonths = then.diff(now, 'months');
 
-        this.countdownWeeks = then.subtract(this.months ? this.countdownMonths : 0, 'months')
+        this._countdownWeeks = then.subtract(this.months ? this._countdownMonths : 0, 'months')
           .diff(now, 'weeks');
 
-        this.countdownDays = then.subtract(this.weeks ? this.countdownWeeks : 0, 'weeks')
+        this._countdownDays = then.subtract(this.weeks ? this._countdownWeeks : 0, 'weeks')
           .diff(now, 'days');
 
         if (this.hours || this.minutes || this.seconds) {
-          this.countdownHours = then.subtract(this.days ? this.countdownDays : 0, 'days')
+          this._countdownHours = then.subtract(this.days ? this._countdownDays : 0, 'days')
             .diff(now, 'hours');
 
-          this.countdownMinutes = then.subtract(this.hours ? this.countdownHours : 0, 'hours')
+          this._countdownMinutes = then.subtract(this.hours ? this._countdownHours : 0, 'hours')
             .diff(now, 'minutes');
 
-          this.countdownSeconds = then.subtract(this.minutes ? this.countdownMinutes : 0, 'minutes')
+          this._countdownSeconds = then.subtract(this.minutes ? this._countdownMinutes : 0, 'minutes')
             .diff(now, 'seconds');
         } else {
-          this.countdownDays += 1;
+          this._countdownDays += 1;
         }
+      },
+
+      _returnUnit: function(unit, value) {
+        return value > 1 ? unit : unit.replace(/s$/, '');
       }
     });
   </script>
